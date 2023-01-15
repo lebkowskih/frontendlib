@@ -2,16 +2,12 @@ import axios, { AxiosHeaders } from "axios"
 import React, { useState } from "react"
 import { ToastContainer, toast } from "react-toastify"
 import 'react-toastify/dist/ReactToastify.css'
-import { useNavigate } from 'react-router-dom';
-
-
 
 export default function (props) {
   let [authMode, setAuthMode] = useState("signin")
   let [username, setUsername] = useState('')
   let [password, setPassword] = useState('')
   let [email, setEmail] = useState('')
-  const history = useNavigate();
 
 
   const changeAuthMode = () => {
@@ -19,17 +15,28 @@ export default function (props) {
   }
 
   const register = e => {
-    
     e.preventDefault();
     axios.post('http://127.0.0.1:8000/api/register', {
       'name':username,
       'password':password,
       'email':email
-    }).then(res => {
+    }).then(() => {
       toast.success("Rejestracja udana!");
-    }).catch(error => {
+    }).catch(() => {
       toast.error("Rejestracja niepowiodła się!")
     }) 
+  }
+
+  const login = e => {
+    e.preventDefault();
+    axios.post('http://127.0.0.1:8000/api/login/', {
+      'email':email,
+      'password':password
+    }).then(res => {
+      console.log(res)
+    }).catch(error => {
+      console.log(error)
+    })
   }
 
   if (authMode === "signin") {
@@ -50,6 +57,7 @@ export default function (props) {
                 type="email"
                 className="form-control mt-1"
                 placeholder="Enter email"
+                onChange={(e) => setEmail(e.target.value)}
               />
             </div>
             <div className="form-group mt-3">
@@ -58,10 +66,11 @@ export default function (props) {
                 type="password"
                 className="form-control mt-1"
                 placeholder="Enter password"
+                onChange={(e) => setPassword(e.target.value)}
               />
             </div>
             <div className="d-grid gap-2 mt-3">
-              <button type="submit" className="btn btn-primary">
+              <button type="submit" className="btn btn-primary" onClick={login}>
               Zaloguj się
               </button>
             </div>
