@@ -1,10 +1,26 @@
+import axios, { AxiosHeaders } from "axios"
 import React, { useState } from "react"
 
 export default function (props) {
   let [authMode, setAuthMode] = useState("signin")
+  let [username, setUsername] = useState('')
+  let [password, setPassword] = useState('')
+  let [email, setEmail] = useState('')
 
   const changeAuthMode = () => {
     setAuthMode(authMode === "signin" ? "signup" : "signin")
+  }
+
+  const register = e => {
+    e.preventDefault();
+    axios.post('http://localhost:8000/api/register', {
+      'name':username,
+      'password':password,
+      'email':email
+    }).then(res => {
+      console.log(res);
+      console.log(res.data)
+    })
   }
 
   if (authMode === "signin") {
@@ -51,7 +67,7 @@ export default function (props) {
 
   return (
     <div className="Auth-form-container">
-      <form className="Auth-form">
+      <form className="Auth-form" onSubmit={() => register()}>
         <div className="Auth-form-content">
           <h3 className="Auth-form-title">Zarejestruj się</h3>
           <div className="text-center">
@@ -66,6 +82,7 @@ export default function (props) {
               type="name"
               className="form-control mt-1"
               placeholder="e.g Jane Doe"
+              onChange={(e) => setUsername(e.target.value)}
             />
           </div>
           <div className="form-group mt-3">
@@ -74,6 +91,7 @@ export default function (props) {
               type="email"
               className="form-control mt-1"
               placeholder="Email Address"
+              onChange={(e) => setEmail(e.target.value)}
             />
           </div>
           <div className="form-group mt-3">
@@ -82,10 +100,11 @@ export default function (props) {
               type="password"
               className="form-control mt-1"
               placeholder="Password"
+              onChange={(e) => setPassword(e.target.value)}
             />
           </div>
           <div className="d-grid gap-2 mt-3">
-            <button type="submit" className="btn btn-primary">
+            <button type="submit" className="btn btn-primary" onClick={register}>
               Zarejestruj się
             </button>
           </div>
