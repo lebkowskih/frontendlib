@@ -1,26 +1,35 @@
 import axios, { AxiosHeaders } from "axios"
 import React, { useState } from "react"
+import { ToastContainer, toast } from "react-toastify"
+import 'react-toastify/dist/ReactToastify.css'
+import { useNavigate } from 'react-router-dom';
+
+
 
 export default function (props) {
   let [authMode, setAuthMode] = useState("signin")
   let [username, setUsername] = useState('')
   let [password, setPassword] = useState('')
   let [email, setEmail] = useState('')
+  const history = useNavigate();
+
 
   const changeAuthMode = () => {
-    setAuthMode(authMode === "signin" ? "signup" : "signin")
+    setAuthMode(authMode === "signin" ? "signup" : "signin");
   }
 
   const register = e => {
+    
     e.preventDefault();
-    axios.post('http://localhost:8000/api/register', {
+    axios.post('http://127.0.0.1:8000/api/register', {
       'name':username,
       'password':password,
       'email':email
     }).then(res => {
-      console.log(res);
-      console.log(res.data)
-    })
+      toast.success("Rejestracja udana!");
+    }).catch(error => {
+      toast.error("Rejestracja niepowiodła się!")
+    }) 
   }
 
   if (authMode === "signin") {
@@ -68,6 +77,7 @@ export default function (props) {
   return (
     <div className="Auth-form-container">
       <form className="Auth-form" onSubmit={() => register()}>
+      <ToastContainer />
         <div className="Auth-form-content">
           <h3 className="Auth-form-title">Zarejestruj się</h3>
           <div className="text-center">
