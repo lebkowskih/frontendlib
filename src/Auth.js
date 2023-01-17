@@ -1,5 +1,6 @@
 import axios, { AxiosHeaders } from "axios"
 import React, { useState } from "react"
+import { useNavigate } from "react-router-dom"
 import { ToastContainer, toast } from "react-toastify"
 import 'react-toastify/dist/ReactToastify.css'
 
@@ -9,7 +10,7 @@ export default function (props) {
   let [password, setPassword] = useState('')
   let [email, setEmail] = useState('')
 
-
+  const navigator = useNavigate() 
   const changeAuthMode = () => {
     setAuthMode(authMode === "signin" ? "signup" : "signin");
   }
@@ -33,12 +34,13 @@ export default function (props) {
       'email':email,
       'password':password
     }).then(res => {
+      navigator('/dashboard');
       console.log(res)
     }).catch(error => {
       console.log(error)
     })
   }
-
+// logowanie
   if (authMode === "signin") {
     return (
       <div className="Auth-form-container">
@@ -56,7 +58,7 @@ export default function (props) {
               <input
                 type="email"
                 className="form-control mt-1"
-                placeholder="Enter email"
+                placeholder="Adres e-mail"
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>
@@ -65,7 +67,7 @@ export default function (props) {
               <input
                 type="password"
                 className="form-control mt-1"
-                placeholder="Enter password"
+                placeholder="Hasło"
                 onChange={(e) => setPassword(e.target.value)}
               />
             </div>
@@ -82,7 +84,7 @@ export default function (props) {
       </div>
     )
   }
-
+// rejestracja
   return (
     <div className="Auth-form-container">
       <form className="Auth-form" onSubmit={() => register()}>
@@ -100,7 +102,7 @@ export default function (props) {
             <input
               type="name"
               className="form-control mt-1"
-              placeholder="e.g Jane Doe"
+              placeholder="np. Jan Kowalski"
               onChange={(e) => setUsername(e.target.value)}
             />
           </div>
@@ -109,7 +111,7 @@ export default function (props) {
             <input
               type="email"
               className="form-control mt-1"
-              placeholder="Email Address"
+              placeholder="Adres e-mail"
               onChange={(e) => setEmail(e.target.value)}
             />
           </div>
@@ -118,7 +120,7 @@ export default function (props) {
             <input
               type="password"
               className="form-control mt-1"
-              placeholder="Password"
+              placeholder="Hasło"
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
