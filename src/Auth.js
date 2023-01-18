@@ -3,9 +3,8 @@ import React, { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { ToastContainer, toast } from "react-toastify"
 import 'react-toastify/dist/ReactToastify.css'
-import Cookies from "js-cookie";
 
-export default function (props) {
+function Auth (props) {
   let [authMode, setAuthMode] = useState("signin")
   let [username, setUsername] = useState('')
   let [password, setPassword] = useState('')
@@ -35,6 +34,8 @@ export default function (props) {
       'email':email,
       'password':password
     }).then(res => {
+      localStorage.setItem('access', JSON.stringify(res.data.access));
+      localStorage.setItem('refresh', JSON.stringify(res.data.refresh));
       navigator('/dashboard');
       console.log(res)
     }).catch(error => {
@@ -138,3 +139,4 @@ export default function (props) {
     </div>
   )
 }
+export default Auth;
