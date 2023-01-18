@@ -45,7 +45,7 @@ class Authors extends React.Component{
       "surname":this.state.surname,
       "birthday":this.state.birthday,
       "nationality":this.state.nationality,
-      "about":this.state.about
+      "author_description":this.state.about
     }, {
       headers: authHeader()
     }).then(res => {
@@ -58,9 +58,10 @@ class Authors extends React.Component{
     });
   }
 
-  handleDelete(authId) {
+  handleDelete(e, authId) {
+    console.log(authId);
     this.setState({id:authId}, () => {
-      axios.delete('http://127.0.0.1:8000/api/authors'+this.state.id+'/',{
+      axios.delete('http://127.0.0.1:8000/api/authors/'+this.state.id+'/',{
         headers: authHeader()
       }).then(res => {
         toast.success("Usuwanie udane!");

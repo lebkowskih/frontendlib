@@ -15,11 +15,15 @@ class Books extends React.Component{
       date_of_publication: '',
       quantity: '',
       book_description: '',
-      language: '',
       author_id: '',
       category_id: '',
       modal: false,
       id: null,
+      language: '',
+      categories : [],
+      authors : [],
+      catId : null,
+      autId : null,
     }
   }
 
@@ -34,7 +38,7 @@ class Books extends React.Component{
     this.setState({date_of_publication: bookDateOfPublication});
     this.setState({quantity: bookQuantity});
     this.setState({book_description: bookDescription});
-    this.setState({langauge:bookLanguage});
+    this.setState({language:bookLanguage});
     this.setState({author_id: bookAuthor});
     this.setState({category_id: bookCategory});
   }
@@ -48,18 +52,26 @@ class Books extends React.Component{
     axios.put('http://127.0.0.1:8000/api/books/'+this.state.id+'/', {
       "title":this.state.title,
       "isbn":this.state.isbn,
-      "date_of_publication": this.state.quantity,
+      "date_of_publication": this.state.date_of_publication,
       "quantity": this.state.quantity,
       "book_description":this.state.book_description,
       "language":this.state.language,
       "author_id":this.state.author_id,
       "category_id":this.state.category_id
+    }, {
+      headers: authHeader()
+    }).then(res => {
+      this.setState({modal:false})
+      e.preventDefault();
+      this.componentDidMount();
+      toast.success("Edycja udana!");
+    }).catch(() => {
+      toast.error("Edycja niepowiodła się!")
     });
   }
-
-  handleDelete(bookId) {
+  handleDelete(e, bookId) {
     this.setState({id:bookId}, () => {
-      axios.delete('http://127.0.0.1:8000/api/books'+this.state.id+'/',{
+      axios.delete('http://127.0.0.1:8000/api/books/'+this.state.id+'/',{
         headers: authHeader()
       }).then(res => {
         toast.success("Usuwanie udane!");
@@ -104,6 +116,10 @@ class Books extends React.Component{
   componentDidMount() {
     axios.get('http://127.0.0.1:8000/api/books/', { headers: authHeader() })
     .then(res => this.setState({books:res.data}));
+    axios.get('http://127.0.0.1:8000/api/authors/', { headers: authHeader() })
+    .then(res => this.setState({authors:res.data}));
+    axios.get('http://127.0.0.1:8000/api/categories/', { headers: authHeader() })
+    .then(res => this.setState({categories:res.data}));
   }
 
   render = () => { 
@@ -123,6 +139,7 @@ class Books extends React.Component{
             <th scope="col">Language</th>
             <th scope="col">Author</th>
             <th scope="col">Category</th>
+            <th scope="col">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -136,8 +153,12 @@ class Books extends React.Component{
             <td>{books.quantity}</td>
             <td>{books.book_description}</td>
             <td>{books.language}</td>
-            <td>{books.author_id}</td>
-            <td>{books.category_id}</td>
+            {books.authors.map(authors => (
+              <td>{authors.name + ' ' + authors.surname}</td>
+            ))}
+            {books.categories.map(categories => (
+              <td>{categories.name}</td>
+            ))}
             <td>
               <Button variant="secondary" className="me-1" onClick={(e) => this.handleShow(e, books.id, books.title ,books.isbn, books.date_of_publication, books.quantity, books.book_description, books.language,books.author_id, books.category_id, "edit")}>Edit</Button>
               <Button variant="danger" className="btn btn-danger me-1" onClick={(e) => this.handleDelete(e, books.id)}>Delete</Button>
@@ -166,7 +187,7 @@ class Books extends React.Component{
 
             <Form.Group className="mb-3" controlId="formBasicDateOfPublication">
               <Form.Label>Date of publication</Form.Label>
-              <Form.Control type="date" placeholder="Enter date of publication" value={this.state.date_of_publication} onChange={(e) => this.setState({date_of_publication:e.target.value})} />
+              <Form.Control type="text" placeholder="Enter date of publication" value={this.state.date_of_publication} onChange={(e) => this.setState({date_of_publication:e.target.value})} />
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="formBasicQuantity">
@@ -185,13 +206,21 @@ class Books extends React.Component{
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="formBasicAuthorId">
-              <Form.Label>Author id</Form.Label>
-              <Form.Control type="text" placeholder="Enter author id" value={this.state.author_id} onChange={(e) => this.setState({author_id:e.target.value})} />
+              <Form.Label>Author</Form.Label>
+                <Form.Select aria-label="Default select example">
+                  <option>Select author</option>
+                  {this.state.authors.map(authors => 
+                    <option value>{authors.name + ' ' + authors.surname}</option>)}
+                </Form.Select>
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="formBasicCategoryId">
-              <Form.Label>Category id</Form.Label>
-              <Form.Control type="text" placeholder="Enter category id" value={this.state.category_id} onChange={(e) => this.setState({category_id:e.target.value})} />
+              <Form.Label>Category</Form.Label>
+              <Form.Select aria-label="Default select example" onChange={(e) => this.setState({catId: [e.target.value]})}>
+                  <option>Select category</option>
+                  {this.state.categories.map(categories => 
+                    <option value={categories.id}>{categories.name}</option>)}
+                </Form.Select>
             </Form.Group>
           </Form>
 
