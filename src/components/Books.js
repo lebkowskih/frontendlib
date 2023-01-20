@@ -22,8 +22,8 @@ class Books extends React.Component{
       language: '',
       categories : [],
       authors : [],
-      catId : null,
-      autId : null,
+      catId : 0,
+      autId : 0,
     }
   }
 
@@ -47,6 +47,14 @@ class Books extends React.Component{
     this.setState({modal: false});
   }
 
+  handleCat(e){
+    this.setState({catId: e.target.value});
+  }
+
+  handleAut(e){
+    this.setState({autId: e.target.value});
+  }
+
   handleEdit (e) {
     this.setState({mode:'edit'});
     axios.put('http://127.0.0.1:8000/api/books/'+this.state.id+'/', {
@@ -56,8 +64,8 @@ class Books extends React.Component{
       "quantity": this.state.quantity,
       "book_description":this.state.book_description,
       "language":this.state.language,
-      "author_id":this.state.author_id,
-      "category_id":this.state.category_id
+      "authors":this.state.autId,
+      "categories":this.state.catId
     }, {
       headers: authHeader()
     }).then(res => {
@@ -95,8 +103,8 @@ class Books extends React.Component{
       "quantity": this.state.quantity,
       "book_description":this.state.book_description,
       "language":this.state.language,
-      "author_id":this.state.author_id,
-      "category_id":this.state.category_id
+      "authors":this.state.autId,
+      "categories":this.state.catId
     }, {
       headers: authHeader()
     }).then(
@@ -153,14 +161,24 @@ class Books extends React.Component{
             <td>{books.quantity}</td>
             <td>{books.book_description}</td>
             <td>{books.language}</td>
-            {books.authors.map(authors => (
-              <td>{authors.name + ' ' + authors.surname}</td>
-            ))}
-            {books.categories.map(categories => (
-              <td>{categories.name}</td>
-            ))}
+            {this.state.authors.map(authors=>
+              <>
+              {authors.id === books.authors && <td>
+                {authors.name} {authors.surname}
+                </td>}
+              </>
+              )}
             <td>
-              <Button variant="secondary" className="me-1" onClick={(e) => this.handleShow(e, books.id, books.title ,books.isbn, books.date_of_publication, books.quantity, books.book_description, books.language,books.author_id, books.category_id, "edit")}>Edit</Button>
+            {this.state.categories.map(categories=>
+              <>
+              {categories.id === books.categories && <td>
+                {categories.name}
+                </td>}
+              </>
+              )}
+            </td>
+            <td>
+              <Button variant="secondary" className="me-1" onClick={(e) => this.handleShow(e, books.id, books.title ,books.isbn, books.date_of_publication, books.quantity, books.book_description, books.language,books.authors, books.categories, "edit")}>Edit</Button>
               <Button variant="danger" className="btn btn-danger me-1" onClick={(e) => this.handleDelete(e, books.id)}>Delete</Button>
             </td>
           </tr>
@@ -205,18 +223,18 @@ class Books extends React.Component{
               <Form.Control type="text" placeholder="Enter language" value={this.state.language} onChange={(e) => this.setState({language:e.target.value})} />
             </Form.Group>
 
-            <Form.Group className="mb-3" controlId="formBasicAuthorId">
-              <Form.Label>Author</Form.Label>
-                <Form.Select aria-label="Default select example">
-                  <option>Select author</option>
+            <Form.Group className="mb-3" controlId="formBasicCategoryId">
+              <Form.Label>Authors</Form.Label>
+              <Form.Select aria-label="Default select example" onChange={(e) => this.handleAut(e)} value = {this.state.autId}>
+                  <option>Select category</option>
                   {this.state.authors.map(authors => 
-                    <option value>{authors.name + ' ' + authors.surname}</option>)}
+                    <option value={authors.id}>{authors.name} {authors.surname}</option>)}
                 </Form.Select>
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="formBasicCategoryId">
               <Form.Label>Category</Form.Label>
-              <Form.Select aria-label="Default select example" onChange={(e) => this.setState({catId: [e.target.value]})}>
+              <Form.Select aria-label="Default select example" onChange={(e) => this.handleCat(e)} value = {this.state.catId}>
                   <option>Select category</option>
                   {this.state.categories.map(categories => 
                     <option value={categories.id}>{categories.name}</option>)}

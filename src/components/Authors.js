@@ -18,10 +18,11 @@ class Authors extends React.Component{
       about: '',
       id: null,
       mode : '',
+      books : '',
     }
   }
 
-  handleShow(e , authId, authName, authSurname, authBirthday, authNationality, authAbout, mode)
+  handleShow(e , authId, authName, authSurname, authBirthday, authNationality, authAbout, mode,books)
   {
     this.setState({mode: mode})
     e.preventDefault();
@@ -31,6 +32,7 @@ class Authors extends React.Component{
     this.setState({surname:authSurname});
     this.setState({birthday:authBirthday});
     this.setState({nationality:authNationality});
+    this.setState({books: books});
     this.setState({about: authAbout});
   }
 
@@ -45,8 +47,10 @@ class Authors extends React.Component{
       "surname":this.state.surname,
       "birthday":this.state.birthday,
       "nationality":this.state.nationality,
-      "author_description":this.state.about
-    }, {
+      "author_description":this.state.about,
+      "books":this.state.books
+    }, 
+    {
       headers: authHeader()
     }).then(res => {
       this.setState({modal:false})
@@ -83,7 +87,8 @@ class Authors extends React.Component{
       "surname":this.state.surname,
       "birthday":this.state.birthday,
       "nationality":this.state.nationality,
-      "author_description":this.state.about
+      "author_description":this.state.about,
+      "books":this.state.books
     }, {
       headers: authHeader()
     }).then(
