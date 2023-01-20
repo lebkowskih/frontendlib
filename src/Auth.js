@@ -36,7 +36,9 @@ function Auth (props) {
     }).then(res => {
       localStorage.setItem('access', JSON.stringify(res.data.access));
       localStorage.setItem('refresh', JSON.stringify(res.data.refresh));
-      navigator('/dashboard');
+      navigator('/dashboard', {
+        state: {isLoggedin: true}
+      });
       console.log(res)
     }).catch(error => {
       console.log(error)

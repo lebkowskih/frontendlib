@@ -1,14 +1,24 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import Books from "./Books";
 import Categories from './Categories';
 import Authors from './Authors';
+import { useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom"
+import { Navigate } from "react-router-dom";
 
 function Dashboard() {
     
     let [showBooks, setShowBooks] = useState(false)
     let [showCategories, setShowCategories] = useState(false)
     let [showAuthors, setShowAuthors] = useState(false)
-
+    const location = useLocation();
+    const navigator = useNavigate() 
+    //const isLoggedin = location.state.isLoggedin;
+    useEffect(() => {
+        if(location.state === null)
+        {navigator("/")}
+    })
+   
     const handleComponentRender = (component) =>
     {
         switch(component) {
@@ -33,8 +43,9 @@ function Dashboard() {
                 setShowCategories(false);
         }
     }
-    return(
+    return( 
         <div className="container-fluid">
+
         <div className="row flex-nowrap">
             <div className="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-dark">
                 <div className="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
@@ -69,9 +80,9 @@ function Dashboard() {
                 {showCategories && <Categories/>}
             </div>
         </div>
-    </div>
+   </div>
     
-  )
+)
 }
 
 export default Dashboard;
