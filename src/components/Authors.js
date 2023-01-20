@@ -166,7 +166,7 @@ class Authors extends React.Component{
 
             <Form.Group className="mb-3" controlId="formBasicBirthday">
               <Form.Label>Birthday</Form.Label>
-              <Form.Control type="text" placeholder="Enter birthday" value={this.state.birthday} onChange={(e) => this.setState({birthday:e.target.value})} />
+              <Form.Control type="date" placeholder="Enter birthday" value={this.state.birthday} onChange={(e) => this.setState({birthday:e.target.value})} />
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="formBasicNationality">

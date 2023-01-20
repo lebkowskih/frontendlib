@@ -31,16 +31,16 @@ class Books extends React.Component{
   {
     this.setState({mode:mode});
     e.preventDefault();
-    this.setState({modal:true});
-    this.setState({id:bookId});
-    this.setState({title:bookTitle})
-    this.setState({isbn:bookIsbn});
+    this.setState({modal: true});
+    this.setState({id: bookId});
+    this.setState({title: bookTitle})
+    this.setState({isbn: bookIsbn});
     this.setState({date_of_publication: bookDateOfPublication});
     this.setState({quantity: bookQuantity});
     this.setState({book_description: bookDescription});
-    this.setState({language:bookLanguage});
-    this.setState({author_id: bookAuthor});
-    this.setState({category_id: bookCategory});
+    this.setState({language: bookLanguage});
+    this.setState({autId: bookAuthor});
+    this.setState({catId: bookCategory});
   }
   
   handleClose() {
@@ -205,7 +205,7 @@ class Books extends React.Component{
 
             <Form.Group className="mb-3" controlId="formBasicDateOfPublication">
               <Form.Label>Date of publication</Form.Label>
-              <Form.Control type="text" placeholder="Enter date of publication" value={this.state.date_of_publication} onChange={(e) => this.setState({date_of_publication:e.target.value})} />
+              <Form.Control type="date" placeholder="Enter date of publication" value={this.state.date_of_publication} onChange={(e) => this.setState({date_of_publication:e.target.value})} />
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="formBasicQuantity">
