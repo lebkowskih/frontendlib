@@ -90,7 +90,7 @@ class Categories extends React.Component{
     console.log(this.state.categories);
   }
 
-  render = () => { 
+  render = (counter=1) => { 
     return(
     <div>
         <Button variant="success" onClick={(e) => this.handleShow(e, null,null,null,"add")}> Add </Button>
@@ -108,7 +108,7 @@ class Categories extends React.Component{
         { this.state.categories.map(categories =>
         <>
           <tr>
-            <td key="{categories.id}">{categories.id}</td>
+            <td>{counter++}</td>
             <td key="{categories.name}">{categories.name}</td>
             <td key="{categories.category_description}">{categories.category_description}</td>
             <td>

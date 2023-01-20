@@ -55,6 +55,22 @@ class Books extends React.Component{
     this.setState({autId: e.target.value});
   }
 
+  handleBorrow(e,id,quantity){
+    if(quantity >= 1)
+      {axios.patch('http://127.0.0.1:8000/api/books/'+ id + '/',{
+        'quantity': (quantity - 1)
+        },{
+          headers: authHeader() 
+        }
+        ).then(res => {
+          console.log(res);
+          e.preventDefault();
+          this.componentDidMount();
+        })}
+        else{
+          toast.error('The numbers of books is zero!')
+        }
+  }
   handleEdit (e) {
     this.setState({mode:'edit'});
     axios.put('http://127.0.0.1:8000/api/books/'+this.state.id+'/', {
@@ -72,9 +88,9 @@ class Books extends React.Component{
       this.setState({modal:false})
       e.preventDefault();
       this.componentDidMount();
-      toast.success("Edycja udana!");
+      toast.success("Successful editing!");
     }).catch(() => {
-      toast.error("Edycja niepowiodła się!")
+      toast.error("Editing failed!")
     });
   }
   handleDelete(e, bookId) {
@@ -82,11 +98,11 @@ class Books extends React.Component{
       axios.delete('http://127.0.0.1:8000/api/books/'+this.state.id+'/',{
         headers: authHeader()
       }).then(res => {
-        toast.success("Usuwanie udane!");
+        toast.success("Deletion successful!");
         this.componentDidMount();
       }).catch(function (error) {
         if (error.res) {
-          toast.error("Usuwanie niepowiodło się!");
+          toast.error("Deletion failed!");
         }
       })
     });
@@ -110,13 +126,13 @@ class Books extends React.Component{
     }).then(
       res => {
         this.setState({modal:false})
-        toast.success("Dodawanie udane!");
+        toast.success("Adding successful!");
         this.componentDidMount();
       }
     ).catch(function(error) {
       if(error.res) {
         this.setState({modal:false})
-        toast.error("Dodawanaie nieudane!")
+        toast.error("Adding failed!")
       }
     })
   }
@@ -129,8 +145,8 @@ class Books extends React.Component{
     axios.get('http://127.0.0.1:8000/api/categories/', { headers: authHeader() })
     .then(res => this.setState({categories:res.data}));
   }
-
-  render = () => { 
+ 
+  render = (counter=1) => { 
     return(
     <div>
           <Button variant="success" onClick={(e) => this.handleShow(e)}> Add </Button>
@@ -154,7 +170,8 @@ class Books extends React.Component{
         { this.state.books.map(books =>
         <>
           <tr>
-            <td>{books.id}</td>
+            
+            <td>{counter++}</td>
             <td>{books.title}</td>
             <td>{books.isbn}</td>
             <td>{books.date_of_publication}</td>
@@ -178,6 +195,7 @@ class Books extends React.Component{
               )}
             </td>
             <td>
+              <Button variant="warning" className="me-1" onClick={(e) => this.handleBorrow(e,books.id, books.quantity)}>Borrow</Button>
               <Button variant="secondary" className="me-1" onClick={(e) => this.handleShow(e, books.id, books.title ,books.isbn, books.date_of_publication, books.quantity, books.book_description, books.language,books.authors, books.categories, "edit")}>Edit</Button>
               <Button variant="danger" className="btn btn-danger me-1" onClick={(e) => this.handleDelete(e, books.id)}>Delete</Button>
             </td>

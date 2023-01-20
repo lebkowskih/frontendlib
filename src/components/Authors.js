@@ -111,7 +111,7 @@ class Authors extends React.Component{
     .then(res => this.setState({authors:res.data}));
   }
 
-  render = () => { 
+  render = (counter=1) => { 
     return(
     <div>
         <Button variant="success" onClick={(e) => this.handleShow(e)}> Add </Button>
@@ -132,7 +132,7 @@ class Authors extends React.Component{
         { this.state.authors.map(authors =>
         <>
           <tr>
-            <td>{authors.id}</td>
+            <td>{counter++}</td>
             <td>{authors.name}</td>
             <td>{authors.surname}</td>
             <td>{authors.birthday}</td>
